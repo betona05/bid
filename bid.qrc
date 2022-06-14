@@ -1,6 +1,0 @@
-<RCC>
-  <qresource prefix="logo">
-    <file>betonalogo.png</file>
-  </qresource>
-  <qresource prefix="background-color: rgb(255, 255, 255)"/>
-</RCC>
