@@ -108,8 +108,11 @@ lhparams = {'serviceKey' : g2bkeydecoding, 'numOfRows' : '200', 'pageNo' : '1', 
 #bidNtceNo = '20220618405'
 #bidNtceNo = '20220616711'
 #bidNtceNo = '20220623796'
-#bidNtceNo = '2202200'
-bidNtceNo = '2202096'
+# bidNtceNo = '2202200'  #1300억짜리
+#bidNtceNo = '2004496'   #비트낙찰
+#bidNtceNo = '2202096'
+bidNtceNo = '20220629869'
+
 
 
 
@@ -154,6 +157,7 @@ class WindowClass(QMainWindow, form_class):
         self.btnBidResultList.clicked.connect(self.runBidResultList)  #개찰결과확인하기
         self.btnSearchCom.clicked.connect(self.runSearchCom)      # 개찰 업체 검색
         self.checkBoxArm.stateChanged.connect(self.runArm)        # 개찰 알람설정하기
+        self.btnBestBid.clicked.connect(self.runBestBid)          # 최적 산출 찾기
 
 
     # 모두 클리어 하기
@@ -236,6 +240,7 @@ class WindowClass(QMainWindow, form_class):
         global sbidrage
 
         selitem = dismodel1.itemFromIndex(index).text()
+    
         a = selitem.find('(')+1
         b = selitem.find(')')
         result = selitem[a:b].split(',')
@@ -605,12 +610,13 @@ class WindowClass(QMainWindow, form_class):
             bidKind2 = 0
         else : return
         BPrice = int(BPriceStr.replace(',',''))
-
+        Rate=0
         for bidR in bidRate[bidKind1][bidKind2] :
             if BPrice >= bidR[1] and BPrice < bidR[2] : Rate = bidR[0]
-        
-        print("낙찰하한율 : {}".format(Rate))
-        self.txtResult7.setText(str(Rate))
+
+        if(Rate !=0):
+            print("낙찰하한율 : {}".format(Rate))
+            self.txtResult7.setText(str(Rate))
     # 복수예비가격 1번산출
     def runPrice1(self):
         if(self.txtResult2_1.text() == ''): 
@@ -699,6 +705,9 @@ class WindowClass(QMainWindow, form_class):
         global dismodel1Str
         
         priceSelList = [ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 ]
+
+
+        if(self.txtResult2_3.text()==''): return
 
         bidNtceNo = self.bidNum.text().replace(" ","")
         base = self.txtResult2_1.text().replace(" ","")
@@ -809,6 +818,33 @@ class WindowClass(QMainWindow, form_class):
         dismodel1.appendRow(QStandardItem(list1))  #listView라인추가
 
         self.listViewBidRun.setModel(dismodel1)  # lisetView에 표시하기
+    # 최적 산출 찾기
+    def runBestBid(self):
+        global dismodel1
+        global dismodel1Str
+
+        if self.txtBidFirst_4.text=="": return   # 산출하지 않거나 개찰결과 예정가격 없으면 리턴
+
+        str2 = self.txtBidFirst_4.text()    #산출최적가
+        str2 = str2[str2.find('(')+1:-1].replace(',','')
+        if(str2 ==""): return
+        BPrice = int(str2)
+        str3 = self.txtBidFirst_3.text().replace(',','')    #1순위 낙찰금액
+        APrice = int(str3)
+        bestStr = ""
+        for dismodelData in dismodel1Str:
+            str = dismodelData.replace("순공사원가",'')
+            str = str[:str.find('(')]
+            str = str.replace(',','')
+            sBidPrice = int(str)
+            if(sBidPrice >= BPrice and sBidPrice <=APrice):     # 1순위 보다작고 산출최적가보다 크면 최적산출금액
+                print("최적산출금액 {}".format(dismodelData))
+                bestStr = bestStr+"최적산출금액 : "+dismodelData+'\n'
+        if bestStr != '':
+            self.labDisplay.setText(bestStr)
+        else :
+            self.labDisplay.setText("최적산출금액없음")
+
      # 복수예비가격 반복산출
     def runPrice1S(self):
         n = int(self.txtBsisRepNum.text())
@@ -879,7 +915,12 @@ class WindowClass(QMainWindow, form_class):
     # 투찰금액 복수산출
     def runBidPrice1S(self):
         n = int(self.txtBsisRepNum_2.text())
-        for j in range(0,n):
+        y = int(self.txtBsisRepNum_3.text())
+
+        for j in range(1,n+1):
+            if y!=0 :
+                if j%y == 0 :
+                    self.runPrice1()
             self.runBidPrice1()
     #개찰결과확인하기
     def runBidResultList(self):
@@ -995,7 +1036,7 @@ class WindowClass(QMainWindow, form_class):
             startPage += 1
         self.listViewResultList.setModel(dismodel2)  # lisetView에 표시하기
         self.labDisplay.setText("개찰완료 {}개회사가 투찰하였습니다.".format(totalCount))
-        playsound("noti1.wav")
+#        playsound("noti1.wav")
         totalCountResult = totalCount
         self.labDisplay.repaint()
 

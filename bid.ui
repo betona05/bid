@@ -1026,8 +1026,8 @@
    <widget class="QLineEdit" name="txtBsisRepNum_2">
     <property name="geometry">
      <rect>
-      <x>800</x>
-      <y>660</y>
+      <x>790</x>
+      <y>650</y>
       <width>71</width>
       <height>20</height>
      </rect>
@@ -1091,8 +1091,8 @@
     <property name="geometry">
      <rect>
       <x>720</x>
-      <y>660</y>
-      <width>71</width>
+      <y>650</y>
+      <width>61</width>
       <height>16</height>
      </rect>
     </property>
@@ -1495,9 +1495,9 @@
    <widget class="QLabel" name="label_11">
     <property name="geometry">
      <rect>
-      <x>760</x>
+      <x>790</x>
       <y>740</y>
-      <width>111</width>
+      <width>81</width>
       <height>31</height>
      </rect>
     </property>
@@ -1555,9 +1555,9 @@
    <widget class="QLabel" name="label_12">
     <property name="geometry">
      <rect>
-      <x>760</x>
+      <x>790</x>
       <y>780</y>
-      <width>111</width>
+      <width>81</width>
       <height>31</height>
      </rect>
     </property>
@@ -1881,6 +1881,48 @@
       <string>시설용역</string>
      </property>
     </item>
+   </widget>
+   <widget class="QPushButton" name="btnBestBid">
+    <property name="geometry">
+     <rect>
+      <x>680</x>
+      <y>740</y>
+      <width>91</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>최적산출 찾기</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="txtBsisRepNum_3">
+    <property name="geometry">
+     <rect>
+      <x>790</x>
+      <y>680</y>
+      <width>71</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>0</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_7">
+    <property name="geometry">
+     <rect>
+      <x>720</x>
+      <y>680</y>
+      <width>61</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>예 가 바 꿈</string>
+    </property>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
