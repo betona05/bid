@@ -7,19 +7,10 @@ import time
 import requests
 import json
 import random
-import socket
 # from playsound import playsound
 import xmltodict
 from bs4 import BeautifulSoup as bs
 
-isInternet = False
-ipaddress=socket.gethostbyname(socket.gethostname())
-if ipaddress=="127.0.0.1":
-    print("You are not connected to the internet!")
-    isInternet = False
-else:
-    print("You are connected to the internet with the IP address of "+ ipaddress )
-    isInternet = True
 
 priceRate =[ [[0.9700000000, 0.973750000],
             [0.9737500001, 0.9775000001],
@@ -115,7 +106,7 @@ bidNtceNo = '20220629869'
 
 
 
-
+priceLists = []
 priceList = []
 priceSelList =  [ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 ]
 dismodelTitle = QStandardItemModel()
@@ -238,13 +229,17 @@ class WindowClass(QMainWindow, form_class):
         global dismodel1
         global priceSelList
         global sbidrage
+        global priceLists
+        global priceList
 
         selitem = dismodel1.itemFromIndex(index).text()
     
+        num = int(selitem[selitem.find('sn:')+3:])    # sn: 이후 번후 추출
         a = selitem.find('(')+1
         b = selitem.find(')')
         result = selitem[a:b].split(',')
- #       print("{} => {} => {}".format(index,selitem,result))
+        print("{} => {} => {} 예가{}".format(num,selitem,result,priceLists[num-1]))
+        priceList = priceLists[num-1]
         aa = selitem.find('순공사적용')
         if aa != -1: self.labDisplay.setText(selitem[aa:])
 
@@ -703,6 +698,7 @@ class WindowClass(QMainWindow, form_class):
         global sbidrage
         global isDisplay
         global dismodel1Str
+        global priceLists
         
         priceSelList = [ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 ]
 
@@ -799,15 +795,17 @@ class WindowClass(QMainWindow, form_class):
         bidS2 = round((sbidPrice / baseprice)*100,3)
 
         if(basicPrice!=0 and sbidPrice < basicPrice) :
-            list1 = "{0: >5} : {1: >15} ({2: >2},{3: >2},{4: >2},{5: >2}) - ({6: >7}%) [{7: >7}%] 산출{8}".format(priceNum,basicPriceStr,bidSelList[0][1]+1,bidSelList[1][1]+1,bidSelList[2][1]+1,bidSelList[3][1]+1,bidS1,bidS2,sbidPricestr)
-            list2 = "{0: >15} ({1: >2},{2: >2},{3: >2},{4: >2}) - ({5: >7}%) [{6: >7}%]".format(basicPriceStr,bidSelList[0][1]+1,bidSelList[1][1]+1,bidSelList[2][1]+1,bidSelList[3][1]+1,bidS1,bidS2,sbidPricestr)
+            list1 = "{0: >5} : {1: >15} ({2: >2},{3: >2},{4: >2},{5: >2}) - ({6: >7}%) [{7: >7}%] 산출{8} sn:{9}".format(priceNum,basicPriceStr,bidSelList[0][1]+1,bidSelList[1][1]+1,bidSelList[2][1]+1,bidSelList[3][1]+1,bidS1,bidS2,sbidPricestr,priceNum)
+            list2 = "{0: >15} ({1: >2},{2: >2},{3: >2},{4: >2}) - ({5: >7}%) [{6: >7}%] sn:{7}".format(basicPriceStr,bidSelList[0][1]+1,bidSelList[1][1]+1,bidSelList[2][1]+1,bidSelList[3][1]+1,bidS1,bidS2,sbidPricestr,priceNum)
         else:
-            list1 = "{0: >5} : {1: >15} ({2: >2},{3: >2},{4: >2},{5: >2}) - ({6: >7}%) [{7: >7}%]".format(priceNum,sbidPricestr,bidSelList[0][1]+1,bidSelList[1][1]+1,bidSelList[2][1]+1,bidSelList[3][1]+1,bidS1,bidS2)
-            list2 = "{0: >15} ({1: >2},{2: >2},{3: >2},{4: >2}) - ({5: >7}%) [{6: >7}%]".format(sbidPricestr,bidSelList[0][1]+1,bidSelList[1][1]+1,bidSelList[2][1]+1,bidSelList[3][1]+1,bidS1,bidS2)
+            list1 = "{0: >5} : {1: >15} ({2: >2},{3: >2},{4: >2},{5: >2}) - ({6: >7}%) [{7: >7}%] sn:{8}".format(priceNum,sbidPricestr,bidSelList[0][1]+1,bidSelList[1][1]+1,bidSelList[2][1]+1,bidSelList[3][1]+1,bidS1,bidS2,priceNum)
+            list2 = "{0: >15} ({1: >2},{2: >2},{3: >2},{4: >2}) - ({5: >7}%) [{6: >7}%] sn:{7}".format(sbidPricestr,bidSelList[0][1]+1,bidSelList[1][1]+1,bidSelList[2][1]+1,bidSelList[3][1]+1,bidS1,bidS2,priceNum)
 
         if(basicPrice!=0): 
             list1 = list1+ basicPriceStr
             list2 = list2+ basicPriceStr
+
+        priceLists.append(priceList)
 
         dismodel1Str.append(list2)
         priceSelList[bidSelList[0][1]] = 1
