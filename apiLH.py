@@ -61,7 +61,7 @@ lhparams = {'serviceKey' : g2bkeydecoding, 'numOfRows' : '200', 'pageNo' : '1', 
 
 bidNtceNo = '2202096'
 inputDate = '20220622'
-
+url3 = 'http://ebid.lh.or.kr/ebid.et.tp.cmd.BidctrctgdsDetailListCmd.dev?bidNum=2202248&bidDegree=00'
 url2 = 'http://ebid.lh.or.kr/ebid.et.tp.cmd.BidConstructDetailListCmd.dev?bidNum=2202248&bidDegree=00'
 # 2202040 시설공사
 # 2202225 용역

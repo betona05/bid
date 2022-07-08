@@ -1,0 +1,924 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><head><meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<script language="JavaScript" type="text/JavaScript">
+
+                //window.location = "/common/error/servicepage.jsp";
+
+</script>
+<!-- -->
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<title>한국토지주택공사 전자조달 시스템 &gt;&gt; 입찰공고상세조회(시설공사)-외부</title>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+<link href="/common/css/global/import.css" rel="stylesheet" type="text/css"/>
+<link href="/common/css/behavior.css" rel="stylesheet" type="text/css"/>
+<link href="/common/app/SecuKitNXS-HTML5/SecuKitNXS/WebUI/css/base.css" rel="stylesheet" type="text/css"/>
+<!-- KICA WebNPKI, V-Keyboard CSS -->
+<link href="/common/app/SecuKitNXS-HTML5/SecuKitNXS/WebUI/css/wn.css" rel="stylesheet" type="text/css"/>
+<!-- VirtureKeyPad Scripts -->
+<link href="/common/app/SecuKitNXS-HTML5/SecuKitNXS/WebUI/css/keyboard-basic.css" rel="stylesheet" type="text/css"/>
+<script src="/common/app/markany/markany_webdrm/jquery-1.11.3.min.js" type="text/javascript"></script>
+<script src="/TouchEn/nxKey/js/TouchEnNx.js" type="text/javascript"></script>
+<script src="/common/app/SecuKitNXS-HTML5/SecuKitNXS/KICA/html5/jquery.keyboard.min2.js" type="text/javascript"></script>
+<script type="text/javascript">
+jQuery.noConflict();
+var jqvar = jQuery;
+</script>
+<script src="/common/app/SecuKitNXS-HTML5/SecuKitNXS/KICA/config/nx_config.js" type="text/javascript"></script>
+<script src="/common/app/SecuKitNXS-HTML5/SecuKitNXS/KICA/config/LoadSecukitnx.js" type="text/javascript"></script>
+<!--// WebNPKI API Scripts //-->
+<script src="/common/app/SecuKitNXS-HTML5/SecuKitNXS/KICA/html5/wn/html5Api.js" type="text/javascript"></script>
+<!--  지문보안토큰 정보 추출 결과 Script -->
+<script src="/common/app/SecuKitNXS-HTML5/SecuKitNXS/KICA/util/BioHSM/BioHSM.js" type="text/javascript"></script>
+<script src="/common/js/appl/ebid_sg_common3.js" type="text/javascript"></script>
+<script src="/common/js/global/prototype.js" type="text/javascript"></script>
+<script src="/common/js/global/dui_base.js" type="text/javascript"></script>
+<script src="/common/js/global/dui_webvalidator.js" type="text/javascript"></script>
+<script src="/common/js/global/dui_effect.js" type="text/javascript"></script>
+<script src="/common/js/global/dui_hhmenu.js" type="text/javascript"></script>
+<script src="/common/js/global/dui_slidemenu.js" type="text/javascript"></script>
+<script src="/common/js/global/dui_tab.js" type="text/javascript"></script>
+<script src="/common/js/global/common.js" type="text/javascript"></script>
+<script src="/common/js/appl/ebid_strUtil.js" type="text/javascript"></script>
+<script src="/common/js/appl/ebid_document3.js" type="text/javascript"></script>
+<script src="/common/js/appl/ebid_message.js" type="text/javascript"></script>
+<script src="/common/js/xsync.js" type="text/javascript"></script>
+<script src="/common/js/appl/ebid_common.js" type="text/javascript"></script>
+<script type="text/javascript">
+// <![CDATA[
+/*******************************************************************************
+* FUNCTION 명 : EETTP00211.jsp_OnLoadCompleted (화면 로딩 시 작업)
+*******************************************************************************/
+//초기화
+function fn_Init() {
+
+        /*if('2202096' == '0999373' || '2202096' == '0999399' || '2202096' == '0999400'){
+                window.open("/contants/bidinfoContants.jsp", "bidinfo", "top=150px,left=300px,width=620px,height=520px");
+        }*/
+
+        // 특정공고에 대한 알림팝업 출력
+        if('2202096' == '1202540'){
+                window.open("/popup/OpenNotice51.jsp", "bidinfo", "top=150px,left=300px,width=620px,height=170px");
+        }else if('2202096' == '1300218' || '2202096' == '1300219' || '2202096' == '1301293' || '2202096' == '1301294' || '2202096' == '1301352'
+                ||'2202096' == '1301630'||'2202096' == '1301631'){
+                window.open("/popup/OpenNotice52.jsp", "bidinfo", "top=150px,left=300px,width=600px,height=200px");
+        }
+
+        //2021.01.01부터 전문면허 활성화
+        if('20220622' < '20210122'){
+                document.getElementById('LblockDetail5').className = "LblockListTable";
+                document.getElementById('LblockDetail6').className =  "Lnodisplay";
+        }else{
+                document.getElementById('LblockDetail6').className = "LblockListTable";
+                document.getElementById('LblockDetail5').className = "Lnodisplay";
+        }
+}
+/*
+ * -. 입찰목록 화면으로 이동한다.
+ */
+ function fn_dds_bidlist(){
+                var url ="";
+
+                if('' == 'Y'){
+                        url = "/ebid.et.tp.cmd.BidFailListCmd.dev";
+                }else{
+                        url = "/ebid.et.tp.cmd.BidMasterListCmd.dev";
+                }
+                document.iform.action = url;
+                document.iform.target = "_self";
+                document.iform.submit();
+}
+/*
+ * -. 입찰참가신청서
+ */
+function fn_dds_bidwrite(){
+        var nowDate = cn_getNowDateTime();
+        if('2022/07/29 10:00' >= nowDate){
+                alert("입찰서 작성 기간이 아닙니다.");
+                return false;
+        }
+        if('2022/08/02 14:00' <= nowDate){
+                alert("입찰서 작성이 마감되었습니다.");
+                return false;
+        }
+
+        document.iform.action = "/ebid.et.ts.cmd.BidtenderListCmd.dev;jsessionid=0mE3CwPYbCE6oWyz1712plXbnJk51L1UFFDkwfAUZce3UtB374L6P24NjltJaaID.lhbidWAS2_servlet_engine1";
+        document.iform.target = "_self";
+        document.iform.submit();
+}
+
+/*
+ * -. 입찰참가신청서 작성
+ */
+function fn_dds_joinwirte(){
+        var nowDate = cn_getNowDateTime();
+        if(' ' <= nowDate){
+                alert("입찰참가신청서 작성이 마감되었습니다.");
+                return false;
+        }
+        document.iform.action = "/ebid.et.tp.cmd.BidjoindocListCmd.dev;jsessionid=0mE3CwPYbCE6oWyz1712plXbnJk51L1UFFDkwfAUZce3UtB374L6P24NjltJaaID.lhbidWAS2_servlet_engine1";
+        document.iform.target = "_self";
+        document.iform.submit();
+}
+
+/*
+ * -. 공동수급협정서 작성
+ */
+function fn_dds_cooperdocwrite(){
+        //alert('');
+
+        var nowDate = cn_getNowDateTime();
+
+        if('2022/08/01 18:00' <= nowDate){
+                alert("공동수급협정서 작성이 마감되었습니다.");
+                return false;
+        }
+
+        document.pform.taxregno.value = '';
+        document.pform.action = "/ebid.et.ts.cmd.BidCooperListCmd.dev;jsessionid=0mE3CwPYbCE6oWyz1712plXbnJk51L1UFFDkwfAUZce3UtB374L6P24NjltJaaID.lhbidWAS2_servlet_engine1";
+
+        document.pform.target = "_self";
+        document.pform.submit();
+}
+
+/*
+ * 파일다운로드
+ */
+function fn_dds_open(bidAttachdocType, bidAttachfileNm, svrBidFilePath, clntBidFilePath) {
+        var bidAttachfileNm = bidAttachfileNm;
+        var svrBidFilePath      = svrBidFilePath;
+        var clntBidFilePath     = clntBidFilePath;
+
+        cn_downLoadFile('bidinfo', clntBidFilePath, bidAttachfileNm);
+
+        if(bidAttachdocType == "40"){
+                var fileNm = '2202096'+'_'+'00'+'_cert.txt';
+        }
+
+}
+
+/*
+ * 입찰공고/정정/연기/취소/ 일반 History
+ */
+function fn_open_histroy(bidNum, bidDegree){
+        var url = "/ebid.et.tp.cmd.BidConstructDetailListCmd.dev";
+        var pop = window.open("", "kind", "width=1000px,height=800px,scrollbars=yes,toolbar=no,location=no,status=no,menubar=no,resizable=no");
+        document.tform.bidNum.value = bidNum;
+        document.tform.bidDegree.value = bidDegree;
+        document.tform.bidPopflag.value = "true";
+    document.tform.action = url;
+        document.tform.target = "kind";
+        document.tform.submit();
+}
+
+function fn_close(){
+        self.close();
+}
+
+function fn_dds_dsgntedvndr(){
+        var popform = document.iform;
+        var pop = window.open("", "fn_dds_dsgntedvndr", "width=640,height=400,scrollbars=yes,toolbar=no,location=no,status=no,menubar=no,resizable=no");
+    popform.action = '/ebid.et.tp.cmd.BidDsgntedvndrListCmd.dev';
+        popform.target = "fn_dds_dsgntedvndr";
+        popform.submit();
+}
+
+/*
+ * -. 출력
+ */
+function fn_print() {
+        var split_param;
+        var iTemp = 0;
+        var print_param = new Array;
+        var reportViewPrFileNm = "ozBidInfolist10Out.ozr";
+        print_param[iTemp++] = "reportViewPrFileNm"+"/"+reportViewPrFileNm;
+        print_param[iTemp++] = "bid_num"+"/"+'2202096'; // Parameter(name/value)
+        print_param[iTemp++] = "bid_degree"+"/"+'00'; // Parameter(name/value)
+
+        for(var p=0; p<print_param.length; p++){
+                var newObj = document.createElement("input");
+                newObj.setAttribute("type", "hidden");
+                split_param = print_param[p].split('/');
+                newObj.setAttribute("name", split_param[0]);
+                newObj.setAttribute("value", split_param[1]);
+                var newElement = document.getElementById("printformHiddenId");
+                newElement.appendChild(newObj);
+        }
+        var pop = window.open("", cn_str_replace(reportViewPrFileNm,'.'), "scrollbars=no,toolbar=no,location=no,status=no,menubar=no,resizable=yes,width=1000,height=700");
+        document.printform.action = "/ebid.com.report.cmd.ReportViewCmd.dev";
+        document.printform.target = cn_str_replace(reportViewPrFileNm,'.');
+        document.printform.submit();
+}
+//]]>
+</script>
+<style type="text/css">
+/* Page Style을 별도로 정의 할 경우 해당 Area에 정의 합니다. */
+</style>
+</head><body onload="cn_page_onLoad('main');fn_Init();">
+<!-- OZ Print Form Start -->
+<form method="post" name="printform" onsubmit="return false;">
+<div id="printformHiddenId"></div>
+</form>
+<!-- OZ Print Form End -->
+<div id="LblockSkipLink">
+<p><a href="#LblockTopMenu">주메뉴 바로가기</a></p>
+<p><a href="#LblockLeftMenu">서브메뉴 바로가기</a></p>
+<p><a href="#LblockMain">콘텐츠 바로가기</a></p>
+</div>
+<hr/>
+<div id="LblockWrapper">
+<style>
+#LblockHeader {
+        z-index:1;
+
+                background:url(/img/global/header_bg.gif) no-repeat left top;
+
+}
+</style>
+<form id="cnLoginDataFormLH" name="cnLoginDataFormLh">
+<input id="CHALLENGE" name="CHALLENGE" type="hidden" value="aoOxvxw+dqDy2nzM/I7yx7BbgAU="/>
+<input id="ServerKmCert" name="ServerKmCert" type="hidden" value="-----BEGIN CERTIFICATE-----
+MIIFazCCBFOgAwIBAgIEBfH3HzANBgkqhkiG9w0BAQsFADBKMQswCQYDVQQGEwJL
+UjENMAsGA1UECgwES0lDQTEVMBMGA1UECwwMQWNjcmVkaXRlZENBMRUwEwYDVQQD
+DAxzaWduR0FURSBDQTUwHhcNMjEwOTAyMDc0ODU1WhcNMjIxMDAxMTQ1OTU5WjCB
+kzELMAkGA1UEBhMCS1IxDTALBgNVBAoMBEtJQ0ExEzARBgNVBAsMCmxpY2Vuc2Vk
+Q0ExDzANBgNVBAsMBlNFUlZFUjENMAsGA1UECwwES0lDQTEPMA0GA1UECwwGU0VS
+VkVSMS8wLQYDVQQDDCbtlZzqta3thqDsp4Dso7ztg53qs7XsgqwoMTkyLjE2OC4x
+MS40KTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAIm5L8E5ETaIQ0OL
+G4I8/jGxYP6mXVzB3jXk0cP5/Jn4V678FYSMTIMz2pM5qop7EuGcfnIsILF2V2pV
+bYidhvAlpMhp0AdifiRxm1fS1/f0Edf+PfrkoQ5479kXFz5z5/OalL4bgnh5FQij
+dfsldNVCE34JyaiQppp1XMCl32Q6qMPosxkgMN7rDjFZqIE3ERP90jNnGPdjq/cv
+uL3azGLazhxezaUa4/p3KTuAM7ov48JSZ5hVB8uKcawPLznfawzYUAqCKgTpCeAh
+HVfmPU6zhtKbyZEYM2jsKGWgmPJzPuKDtjau7u4ZSRj/L5jAbYNLUs/6zSibR2ak
+vBH4f0sCAwEAAaOCAg0wggIJMIGPBgNVHSMEgYcwgYSAFNi+OuxFmcWe45zqgR/S
+HRKwNj6IoWikZjBkMQswCQYDVQQGEwJLUjENMAsGA1UECgwES0lTQTEuMCwGA1UE
+CwwlS29yZWEgQ2VydGlmaWNhdGlvbiBBdXRob3JpdHkgQ2VudHJhbDEWMBQGA1UE
+AwwNS0lTQSBSb290Q0EgNIICEB0wHQYDVR0OBBYEFGqyLBfg8qrHE5gaZW0TSL4X
+xjQQMA4GA1UdDwEB/wQEAwIFIDAXBgNVHSAEEDAOMAwGCiqDGoyaRAUCAQQwgYUG
+A1UdEQR+MHygegYJKoMajJpECgEBoG0wawwm7ZWc6rWt7Yag7KeA7KO87YOd6rO1
+7IKsKDE5Mi4xNjguMTEuNCkwQTA/BgoqgxqMmkQKAQEBMDEwCwYJYIZIAWUDBAIB
+oCIEIJFZoJVFwOjnO4gphEeimR2mmlkCmx20+3Xkv61RENdWMF8GA1UdHwRYMFYw
+VKBSoFCGTmxkYXA6Ly9sZGFwLnNpZ25nYXRlLmNvbTozODkvb3U9ZHA3cDMyNzQ0
+LG91PWNybGRwLG91PUFjY3JlZGl0ZWRDQSxvPUtJQ0EsYz1LUjBEBggrBgEFBQcB
+AQQ4MDYwNAYIKwYBBQUHMAGGKGh0dHA6Ly9vY3NwLnNpZ25nYXRlLmNvbTo5MDIw
+L09DU1BTZXJ2ZXIwDQYJKoZIhvcNAQELBQADggEBAH2t0NBhpqnAajDRGZZ1assg
+arMPV4hlPhrxZ0gs/B96zf9VBBwCJspw7IvR40SyI8yhWek1efJ1F8GTN6jMCK6M
+TaN/BRqO5aPowegwZcRdYJgYfEs5dcucLwNf054Fx9TCZ3IO588piHqMSyfOKGhB
+goNdyK+I4csunTl46oAXWs36EwtEELcdZCEBKYv7TlzUsAEU3V9ETFiQj2PkVZ+3
+hOr+XmD7lXZPGKg6VQXctUN7ckPXNI6slymDLZKY4Pry4wlI+yLD5YzFUkmnvBYQ
+ytJCBearauh0KolVrCzDhKNF1KjhIrIVythGulwfp8nl9p5VBUjlZHy+zFN3AkU=
+-----END CERTIFICATE-----
+"/>
+<!--
+아래의 G2BBioInfo는 조달청에서 변경시 변경해줘야하는 내용입니다.
+G2B에 문의하여 받기
+2014.02.26 모본기기도 사용할 수 있도록 조치(김도훈)
+2019.04.24 스마트플러스 기기도 사용할 수 있도록 조치(윤종민)
+-->
+<input id="G2BBioInfo" name="G2BBioInfo" type="hidden" value="-----BEGIN PKCS7-----
+MIAGCSqGSIb3DQEHAqCAMIIJiAIBATEPMA0GCWCGSAFlAwQCAQUAMIAGCSqGSIb3
+DQEHAaCABIIBuzF8KMHWKb6+xaW+7r+hwMzGvCBFTEZJLTcyTXwxLjEuMC4yfEJI
+U01hcGkuZGxsfGRlNjcyZjI3OWIzYjVlY2Y5ZWIwYTY4ZGQ2NDUxM2E3YzE1Mjg2
+Mjh8MnwowdYpwK+0z7/CxL+5wrTPxrwgQklPLVNFQUx8MS4wLjIuMXxGUF9IU00u
+ZGxsfDM0ODljOTI2YTIxYWY2YWFmYzEzOWQ3OTQzYTgxNjM2N2ExZTExNTZ8M3wo
+wdYpvbTHwbiuuLYgQVNBTTIwNzJGUHwxLjAuMC4xNnxCaW9TaWduLmRsbHxiMmI0
+MGI2MDI4YTJmOGI4YTg4OTBkZmQyZjVkMjY4ZGE2OTNmNTNmfDR8KMHWKbjwursg
+TUtULTEwMDBGfDEuMC4wLjUgfFNBVEJUX2FwaS5kbGx8NDk2OWFiYWExODU4ZjI2
+ZDQzNDdhY2NhMzdjYTkyNzQ3YWQ4MzIwZnw1fCjB1im9uri2xq7Hw7evvbogQlNU
+MjAxRlBNU3wxLjAuMC4xNnxCaW9TaWduLmRsbHxiMmI0MGI2MDI4YTJmOGI4YTg4
+OTBkZmQyZjVkMjY4ZGE2OTNmNTNmAAAAAKCCBbIwggWuMIIElqADAgECAgQEmTom
+MA0GCSqGSIb3DQEBCwUAMEoxCzAJBgNVBAYTAktSMQ0wCwYDVQQKDARLSUNBMRUw
+EwYDVQQLDAxBY2NyZWRpdGVkQ0ExFTATBgNVBAMMDHNpZ25HQVRFIENBNTAeFw0x
+ODEyMjAwMjE1NDJaFw0yMDAxMDIxNDU5NTlaMIGFMQswCQYDVQQGEwJLUjENMAsG
+A1UECgwES0lDQTETMBEGA1UECwwKbGljZW5zZWRDQTEVMBMGA1UECwwM65Ox66Gd
+6riw6rSAMRkwFwYDVQQLDBBLSUNB6rOg6rCd7IS87YSwMREwDwYDVQQLDAjshLzt
+hLBSQTENMAsGA1UEAwwES0lDQTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoC
+ggEBAIZLfXC7q0tjOEiHBQzfdXew02ooFI7qygKE7SQkoGRRzXcxvYlO4vyOEEz4
+QjE8dvFS3/gOksC0kBeYqFxDYgMUouYKVvJ6lePYEut3gwN2MdJVyAiWlp8dqkQs
+k+ZftFvOmlcklhIvOZ/Y3qzUynVyUcuYAppsias877DLiWCCSJifZ8K3XFfNEsmI
+wbCULE8fhfbHgVOVOpUN4TCAXRsBbOsa9RPEvndLA5WMXs0tDqAQJs19faqtAmJc
++N1fabpBNs4ncC0lIYM9olcNBi3OIJpW03mnwB9vttjBOmG4cxWCgVnMlYvLu3ev
+Ibs/Lo2hJIbZddHVkd0LVImbQNMCAwEAAaOCAl4wggJaMIGPBgNVHSMEgYcwgYSA
+FNi+OuxFmcWe45zqgR/SHRKwNj6IoWikZjBkMQswCQYDVQQGEwJLUjENMAsGA1UE
+CgwES0lTQTEuMCwGA1UECwwlS29yZWEgQ2VydGlmaWNhdGlvbiBBdXRob3JpdHkg
+Q2VudHJhbDEWMBQGA1UEAwwNS0lTQSBSb290Q0EgNIICEB0wHQYDVR0OBBYEFCeB
+n/cXsvlfBVY7alo5SCgmDP5PMA4GA1UdDwEB/wQEAwIGwDB1BgNVHSAEbjBsMGoG
+CiqDGoyaRAUCAQEwXDAsBggrBgEFBQcCARYgaHR0cDovL3d3dy5zaWduZ2F0ZS5j
+b20vY3BzLmh0bWwwLAYIKwYBBQUHAgIwIB4ex3QAIMd4yZ3BHLKUACCs9cd4x3jJ
+ncEcx4WyyLLkMHkGA1UdEQRyMHCBFHJrZHVkdHRAc2lnbmdhdGUuY29toFgGCSqD
+GoyaRAoBAaBLMEkMBEtJQ0EwQTA/BgoqgxqMmkQKAQEBMDEwCwYJYIZIAWUDBAIB
+oCIEIHyuxazQdJUVSOgYlQCK45wc6dUSAYFIiEryDrWnuPL8MF8GA1UdHwRYMFYw
+VKBSoFCGTmxkYXA6Ly9sZGFwLnNpZ25nYXRlLmNvbTozODkvb3U9ZHA3cDEwMTUx
+LG91PWNybGRwLG91PUFjY3JlZGl0ZWRDQSxvPUtJQ0EsYz1LUjBEBggrBgEFBQcB
+AQQ4MDYwNAYIKwYBBQUHMAGGKGh0dHA6Ly9vY3NwLnNpZ25nYXRlLmNvbTo5MDIw
+L09DU1BTZXJ2ZXIwDQYJKoZIhvcNAQELBQADggEBAIZBYntLboQA0wS1pLkICK8j
+2qYrA+GvBpBfnljCBo/aPcfJYnjV9ftQ7xWrYVjel7nwj0XLYon+O7+EDBzwIy03
+K/p15yS8KOznoL/tO6lv/m6DGGtXC1Iq5glYBjfPQEYIybFk/DU6wDOZU9F5taVh
++PkaGy/aToM/iUuVJZNBKbNwXKd/M/ugLxtl4DTy2p8mZvaUUII4NmS7G+xOTaRV
+ctc6aSLnzu649CHAehuPnu/sAQhXKrlJars49/JRtVfJQkP02OFedQVJV3NCVy2R
+IRBeR/CotJ+0P8Q5uz5dcsPM/C1VVDBpPq1iIoh6iXNkuCNMPOG1hYVGCH/7zTAx
+ggHoMIIB5AIBATBSMEoxCzAJBgNVBAYTAktSMQ0wCwYDVQQKDARLSUNBMRUwEwYDplaysound
+VQQLDAxBY2NyZWRpdGVkQ0ExFTATBgNVBAMMDHNpZ25HQVRFIENBNQIEBJk6JjAN
+BglghkgBZQMEAgEFAKBpMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZI
+hvcNAQkFMQ8XDTE5MDQxMTAxMDAxOVowLwYJKoZIhvcNAQkEMSIEIL7bwHcHBkXv
+/gavBYNOGGaUbnFxr8KJs0Dq9+pA+lvdMA0GCSqGSIb3DQEBAQUABIIBAA9F/nQU
+5lDcktQ8tw4ZbjZgxT+cTlGXu4CZftxZXNAmBKQwm2qa/UeZTInJR50eUhZYkAWH
+OOiTdRSX1YguXdMMl5YSqFOSu3OSBCMEKhPll95WDt00u/CP4BmgrqHLdb/Ilyz0
+/P/UkZ4AYXHuZ8aT061MZ+PtUsLYGrxAi+v/W98E4iqA617k0y6C5C+LLyfZ+snD
+zJcWev6yCrviauLEtqGNzU2K0ygMU9tgmHZPgPo5nDOlhek0ZMzhRyRhTVQzNBGR
+L/17ctrMyw6fcI80j3EKjbyfxEGdGHTzBkN7LLK4CoaxGAeYvPgVJ7LWD7CneO89
+nt4Hutk5aqtbCmAAAAAA
+-----END PKCS7-----"/>
+</form>
+<!-- LblockHeader -->
+<div id="LblockHeader">
+<div id="LblockHeaderIn">
+<div id="LblockTopLogo">
+<a href="/ebid.com.cmd.MainCmd.dev"><img alt="한국토지주택공사 전자조달시스템" src="/img/global/topLogo.gif"/></a>
+</div>
+<div id="LblockSupportMenu">
+<ul>
+<li class="Lfirst"><a href="/ebid.com.cmd.MainCmd.dev">Home</a></li>
+<li class="Lidx1"><a href="/ebid.com.cmd.MainCmd.dev?param=login">LogIn</a></li>
+<li class="Lidx2"><a href="/ebid.com.SiteMap.dev">Sitemap</a></li>
+<li class="Llast"><a href="/ebid.com.Contactus.dev">Contact Us</a></li>
+</ul>
+</div>
+<div id="LblockTopMenu">
+<ul class="Lclear">
+<li class="Lfirst"><span><a href="/ebid.com.ebidInfomation.dev">입찰안내</a></span>
+<ul>
+<li class="Lfirst"><span><a href="/ebid.com.ebidInfomation.dev">전자조달시스템안내</a></span></li>
+<li class="Llast"><span><a href="/ebid.com.GuidLine.dev">길라잡이</a></span></li>
+</ul>
+</li>
+<li class="Lidx1"><span><a href="/ebid.op.op.cmd.OrderPlanListCmd.dev">발주</a></span>
+<ul>
+<li class="Lfirst"><span><a href="/ebid.op.op.cmd.OrderPlanListCmd.dev">발주계획</a></span></li>
+</ul>
+</li>
+<li class="Lidx2"><span><a href="/ebid.et.tp.cmd.FieldfairDatumListCmd.dev">입찰</a></span>
+<ul>
+<li class="Lfirst"><span><a href="/ebid.et.tp.cmd.FieldfairDatumListCmd.dev">현장설명회</a></span></li>
+<li class="Lidx1"><span><a href="/ebid.et.tp.cmd.BidMasterListCmd.dev">입찰공고</a></span></li>
+<li class="Lidx2"><span><a href="/ebid.et.ts.cmd.BidCooperListCmd.dev">투찰</a></span></li>
+<li class="Lidx3"><span><a href="/ebid.et.op.cmd.BidElectronListCmd.dev">전자수의시담</a></span></li>
+<li class="Llast"><span><a href="/ebid.et.rs.cmd.RseBidMasterListCmd.dev">정기안전점검</a></span></li>
+</ul>
+</li>
+<li class="Lidx3"><span><a href="/ebid.et.tp.cmd.PqScningInitListCmd.dev?scningGb=01&amp;leftMenuType=pqList">심사</a></span>
+<ul>
+<li class="Lfirst"><span><a href="/ebid.et.tp.cmd.PqScningInitListCmd.dev?scningGb=01&amp;leftMenuType=pqList">시설공사</a></span></li>
+<li class="Lidx1"><span><a href="/ebid.et.sc.cmd.EffectnPqOutListCmd.dev">용역</a></span></li>
+<li class="Lidx2"><span><a href="/ebid.et.sc.cmd.FitnessScningResourceOutListCmd.dev">지급자재</a></span></li>
+<li class="Lidx3"><span><a href="/ebid.et.sc.cmd.FitnessScningArticleOutListCmd.dev">물품</a></span></li>
+<li class="Lidx4"><span><a href="/ebid.et.sc.cmd.ScningOutComListCmd.dev">최종낙찰</a></span></li>
+<li class="Llast"><span><a href="/ebid.cm.om.cmd.BbsOpenScnRoomOutListCmd.dev?bbsType=93">심문고</a></span></li>
+</ul>
+</li>
+<li class="Lidx4"><span><a href="/ebid.ct.ct.cmd.CtrctMasterListCmd.dev">계약</a></span>
+<ul>
+<li class="Lfirst"><span><a href="/ebid.ct.ct.cmd.CtrctMasterListCmd.dev">전자계약</a></span></li>
+<li class="Llast"><span><a href="/ebid.ct.ct.cmd.SrvcsexpdocListCmd.dev">내역서관리</a></span></li>
+</ul>
+</li>
+<li class="Lidx5"><span><a href="/ebid.pp.pp.cmd.PrePayCompanyCUInitCmd.dev">대금지급</a></span>
+<ul>
+<li class="Lfirst"><span><a href="/ebid.pp.pp.cmd.PrePayCompanyCUInitCmd.dev">선급금</a></span></li>
+<li class="Lidx1"><span><a href="/ebid.pp.pp.cmd.PpvunexcListCmd.dev">유보금</a></span></li>
+<li class="Llast"><span><a href="/ebid.pp.pp.cmd.AcpsCompanyCUInitCmd.dev">기성금</a></span></li>
+</ul>
+</li>
+<li class="Llast"><span><a href="/ebid.cm.om.cmd.CcrAppInitCmd.dev">실적증명서발급</a></span>
+<ul>
+<li class="Lfirst"><span><a href="/ebid.cm.om.cmd.CcrAppInitCmd.dev">실적증명서발급</a></span></li>
+<li class="Llast"><span><a href="/ebid.cm.om.cmd.CcrAppTruthCmd.dev">진위확인</a></span></li>
+</ul>
+</li>
+</ul>
+</div>
+<div id="MyMenu_Select">
+<img alt="나의메뉴선택하기" src="/img/main/i_mymenu.gif"/>
+<select id="MyMenu_Select2" name="MyMenu_Select2" onchange="cn_mymenuList()">
+<option value="-">나의메뉴를선택하세요</option>
+</select>
+</div>
+<div id="LblockSupportMenu2">
+<ul>
+<li class="Lfirst"><span>고객센터</span>
+<ul>
+<li class="Lfirst"><a href="/ebid.cm.om.cmd.BbsNoticeInitListCmd.dev">공지사항</a></li>
+<li class="Lidx1"><a href="/ebid.cm.om.cmd.BbsFaqOutListCmd.dev">FAQ</a></li>
+<!-- <li class="Lidx2"><a href="/ebid.cm.om.cmd.BbsQnaOutListCmd.dev">Q&amp;A</a></li> -->
+<!-- <li class="Lidx2"><a href="#">Q&amp;A</a></li>-->
+<li class="Lidx2"><a href="/ebid.cm.om.cmd.DataOutListCmd.dev">자료실</a></li>
+<!-- li class="Llast"><a href="/ebid.cm.om.cmd.CcrreqInitCmd.dev?accpsmt_ctfct_cd=10">증명서발급</a></li-->
+</ul>
+</li>
+<li class="Llast"><span>My Bid</span>
+<ul>
+<li class="Lfirst"><a href="/ebid.cm.om.cmd.VndrInfoDetailCmd.dev">나의정보</a></li>
+<li class="Lidx1"><a href="/ebid.cm.om.cmd.ConcerntndrInitCmd.dev">관심입찰</a></li>
+<li class="Lidx2"><a href="/ebid.cm.om.cmd.OnlineCtrctDocInitCmd.dev">온라인서류제출</a></li> <!-- 2015.12.10 김기현 추가 -->
+<li class="Llast"><a href="/ebid.cm.om.cmd.MailboxRecvMasterListCmd.dev">문서함</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div><!--// LblockHeader -->
+<div id="LblockLeft">
+<div id="LblockLeftTitle"><h1>고객센터</h1></div><div class="LslideMenu" id="LblockLeftMenu"><ul>
+<li class="Lcurrent"><span><a href="/ebid.cm.om.cmd.BbsNoticeInitListCmd.dev">공지사항</a></span></li>
+<li class=""><span><a href="/ebid.cm.om.cmd.BbsFaqOutListCmd.dev">FAQ</a></span></li>
+<li class=""><span><a href="#">자료실</a></span>
+<ul>
+<li class=""><span><a href="/ebid.cm.om.cmd.DataOutListCmd.dev">입찰집행및심사기준</a></span></li>
+<li class=""><span><a href="/ebid.cm.om.cmd.OutbbsListCmd.dev">내역서자료실</a></span></li>
+<li class=""><span><a href="/ebid.cm.om.cmd.BbsManualInitListCmd.dev">사용자매뉴얼</a></span>
+</li></ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="LblockMain">
+<div id="LblockPageTitle">
+<h1>입찰공고상세조회(시설공사)</h1>
+</div><!-- end LblockPageTitle -->
+<div id="LblockPageLocation">
+<ul>
+<li class="Lfirst"><span><a href="#">HOME</a></span></li>
+<li><span><a href="#">전자입찰</a></span></li>
+<li><span><a href="#">입찰공고</a></span></li>
+<li class="Llast"><span>입찰공고조회</span></li>
+</ul>
+</div>
+<div id="LblockMainBody">
+<form method="post" name="pform" onsubmit="return false;">
+<input id="bidNum" name="bidNum" type="hidden" value="2202096"/>
+<input id="bidDegree" name="bidDegree" type="hidden" value="00"/>
+<input id="s_binNum" name="s_binNum" type="hidden" value="2202096"/>
+<input id="s_bidDegree" name="s_bidDegree" type="hidden" value="00"/>
+<input id="taxregno" name="taxregno" type="hidden" value=""/>
+</form>
+<form method="post" name="tform" onsubmit="return false;">
+<input id="binNum" name="bidNum" type="hidden" value=""/>
+<input id="bidDegree" name="bidDegree" type="hidden" value=""/>
+<input id="bidPopflag" name="bidPopflag" type="hidden" value=""/>
+</form>
+<form method="post" name="iform" onsubmit="return false;">
+<input id="binNum" name="bidNum" type="hidden" value="2202096"/>
+<input id="bidDegree" name="bidDegree" type="hidden" value="00"/>
+<input id="taxregno" name="taxregno" type="hidden" value=""/>
+</form>
+<div class="LblockPageSubtitle" id="LblockPageSubtitle1">
+<h2>공고일반</h2>
+</div>
+<div class="LblockDetail" id="LblockDetail1">
+<form id="공고일반정보" method="post">
+<table summary="공고일반정보">
+<caption>공고일반정보</caption>
+<tbody>
+<tr>
+<th style="width:130px"><label for="bidnum">입찰공고번호</label></th>
+<td style="width:200px">2202096 - 00</td>
+<th style="width:80px"><label for="bidKind">공고종류</label></th>
+<td style="width:200px">
+
+                                                일반공고
+                                                (정정처리)
+                                        </td>
+</tr>
+<tr>
+<th><label for="domintergbcd">국내/국제</label></th>
+<td>국내입찰
+
+
+                                        </td>
+<th style="width:150px"><label for="bidCtrkndCd">업종유형</label></th>
+<td>
+                                                정보통신공사
+                                        </td>
+</tr>
+<tr>
+<th><label for="bidnmkor">입찰공고건명</label></th>
+<td colspan="3">
+                                                부천원종 A-1, A-2, C-1BL 아파트 정보통신공사 2공구(행복 1,217호)
+
+
+                                                <br/>
+<!--<font color="red">본 공고는 지문인식 전자입찰제도가 적용되오니 입찰 전일까지 조달청에 지문보안토큰 지���정보를 등록<br/>하여야 합니다.</font>-->
+<font color="red">본 공고는 지문인식 전자입찰제도가 적용되오니 사전에 조달청이 정한 절차에 따라 지문보안토큰에<br/>지문정보를 등록 하여야 합니다.</font>
+</td>
+</tr>
+<!-- 2011.06.10 남동현 - 입찰공고 등록/조회 시 입찰공고일 보완(최초공고등록일 추가) Start -->
+<tr>
+<th><label for="zonehqcd">공고부서</label></th>
+<td>
+<!-- 101112 남동현 추가 (특정공고건에 대한 김포직할사업단 임의 변경) -->
+
+
+
+                                                        인천지역본부
+
+
+                                        </td>
+<th><label for="tndrbidregdt">입찰공고일</label></th>
+<td>2022/06/22</td>
+</tr>
+<!-- 2011.06.10 남동현 - 입찰공고 등록/조회 시 입찰공고일 보완(최초공고등록일 추가) End -->
+<tr>
+<th><label for="presmtprc">추정가격</label></th>
+<td colspan="3">5,912,222,000원 (오십구억일천이백이십이만이천원)</td>
+</tr>
+<tr>
+<th><label for="addttax">부가가치세</label></th>
+<td colspan="3">196,422,000원 (일억구천육백사십이만이천원)</td>
+</tr>
+<tr>
+<th><label for="designprc">설계가격</label></th>
+<td colspan="3">6,108,644,000원 (육십일억팔백육십사만사천원)</td>
+</tr>
+<tr>
+<th><label for="fdmtlamt">기초금액</label></th>
+<td colspan="3">6,108,644,000원 (육십일억팔백육십사만사천원)</td>
+</tr>
+<tr>
+<th><label for="prcscoreExclusAmt">가격점수제외금액(A)</label></th>
+<td colspan="3">335,573,078원 (삼억삼천오백오십칠만삼천칠십팔원)</td>
+</tr>
+<tr>
+<th><label for="alphaAmt">낙찰제외기준금액</label></th>
+<td colspan="3">5,606,164,930원 (오십육억육백일십육만사천구백삼십원)</td>
+</tr>
+<tr>
+<th><label for="bigo">비고</label></th>
+<td colspan="3">
+</td>
+</tr>
+</tbody>
+</table>
+</form>
+</div><!-- end LblockDetail1 -->
+<div class="LblockPageSubtitle" id="LblockPageSubtitle2">
+<h2>계약 및 입찰방식</h2>
+</div>
+<div class="LblockDetail" id="LblockDetail2">
+<form id="계약및입찰방식정보" method="post">
+<table summary="계약및입찰방식정보">
+<caption>계약및입찰방식정보</caption>
+<tbody>
+<tr>
+<th style="width:130px"><label for="tndrctrctmedcd">계약방법</label></th>
+<td style="width:200px">제한경쟁
+                                                </td>
+<th style="width:100px"><label for="tndrmedcd">입찰방법</label></th>
+<td style="width:200px">
+                                                        총액
+                                                </td>
+</tr>
+<tr>
+<th style="width:130px"><label for="tndrformulacd">입찰방식</label></th>
+<td style="width:200px">
+                                                        전자입찰
+                                                </td>
+<th style="width:100px"><label for="sccfbidpsnselmedcd">낙찰자선정방법</label></th>
+<td style="width:200px">적격심사
+
+
+
+
+                                                </td>
+</tr>
+<tr style="width:130px">
+<th><label for="scningtypecd">심사적용기준</label></th>
+<td colspan="3">
+</td>
+</tr>
+<tr>
+<th style="width:130px"><label for="sccfbidpsnselmedcd">공종별 내역서 </label></th>
+<td colspan="3">
+</td>
+</tr>
+<tr>
+<th><label for="indstncrecgntTndrFg">지문인식공고여부</label></th>
+<td colspan="3">
+                                                        예
+                                                </td>
+</tr>
+</tbody>
+</table>
+</form>
+</div><!-- end LblockDetail2 -->
+<div class="LblockPageSubtitle" id="LblockPageSubtitle3">
+<h2>입찰진행 </h2>
+</div>
+<div class="LblockDetail" id="LblockDetail3">
+<form id="입찰진행정보" method="post">
+<table summary="입찰진행정보">
+<caption>입찰진행정보</caption>
+<tbody>
+<tr>
+<th style="width:200px"><label for="cooperdocacptformulacd">공동수급협정서 접수/구성 방식</label></th>
+<td>공동이행
+                                        </td>
+<th style="width:200px"><label for="cooperdocacptenddtm">공동수급협정서접수마감일시</label></th>
+<td>2022/08/01 18:00</td>
+</tr>
+<tr>
+<th><label for="bidjoindocreqfg">입찰참가신청서접수여부</label></th>
+<td>미접수
+                                        </td>
+<th><label for="bidjoindocacptenddtm">입찰참가신청서접수마감일시</label></th>
+<td> </td>
+</tr>
+<tr>
+<th><label for="tndrdocacptbgnindtm">입찰서접수개시일시</label></th>
+<td>2022/07/29 10:00</td>
+<th><label for="tndrdocacptenddtm">입찰서접수마감일시</label></th>
+<td>2022/08/02 14:00</td>
+</tr>
+<tr>
+<th><label for="opendtm">개찰일시</label></th>
+<td colspan="3">2022/08/02 15:00</td>
+</tr>
+<tr>
+<th><label for="retenderFg">재입찰</label></th>
+<td colspan="3">
+                                                재입찰 없음
+                                        </td>
+</tr>
+</tbody>
+</table>
+</form>
+</div><!-- end LblockDetail3 -->
+<div class="LblockPageSubtitle" id="LblockPageSubtitle1">
+<h2>요구면허</h2>
+</div>
+<div class="LblockListTable" id="LblockDetail5">
+<table summary="요구면허" width="2000px;">
+<caption>요구면허</caption>
+<thead>
+<tr>
+<th>번호</th>
+<th>주/부구분</th>
+<th>이행구분</th>
+<th style="width:200px">업종</th>
+<th>요구면허1</th>
+<th>요구면허2</th>
+<th>요구면허3</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td style="text-align:senter">주업종</td>
+<td style="text-align:senter">공동</td>
+<td style="text-align:senter">정보통신공사업</td>
+<td style="text-align:senter">정보통신공사업</td>
+<td style="text-align:senter"> </td>
+<td style="text-align:senter"> </td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="LblockListTable" id="LblockDetail6">
+<div style="overflow-x:scroll; width:735px; height:200px; padding:4px; border:1 solid #000000;">
+<table summary="요구면허" width="2000px;">
+<caption>요구면허</caption>
+<thead>
+<tr>
+<th>번호</th>
+<th>주/부구분</th>
+<th>이행구분</th>
+<th>업종그룹</th>
+<th>면허구분</th>
+<th style="width:200px">업종</th>
+<th>요구면허1</th>
+<th>요구면허2</th>
+<th>요구면허3</th>
+<th>요구면허4</th>
+<th>요구면허5</th>
+<th>요구면허6</th>
+<th>요구면허7</th>
+<th>요구면허8</th>
+<th>요구면허9</th>
+<th>요구면허10</th>
+<th>요구면허11</th>
+<th>요구면허12</th>
+<th>요구면허13</th>
+<th>요구면허14</th>
+<th>요구면허15</th>
+<th>요구면허16</th>
+<th>요구면허17</th>
+<th>요구면허18</th>
+<th>요구면허19</th>
+<th>요구면허20</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td style="text-align:senter">주업종</td>
+<td style="text-align:senter">공동</td>
+<td style="text-align:senter"> </td>
+<td style="text-align:senter"> </td>
+<td style="text-align:senter">정보통신공사업</td>
+<td style="text-align:senter">정보통신공사업</td> <!-- 1 -->
+<td style="text-align:senter"> </td> <!-- 2 -->
+<td style="text-align:senter"> </td> <!-- 3 -->
+<td style="text-align:senter"> </td> <!-- 4 -->
+<td style="text-align:senter"> </td> <!-- 5 -->
+<td style="text-align:senter"> </td> <!-- 6 -->
+<td style="text-align:senter"> </td> <!-- 7 -->
+<td style="text-align:senter"> </td> <!-- 8 -->
+<td style="text-align:senter"> </td> <!-- 9 -->
+<td style="text-align:senter"> </td> <!-- 10 -->
+<td style="text-align:senter"> </td>
+<td style="text-align:senter"> </td>
+<td style="text-align:senter"> </td>
+<td style="text-align:senter"> </td>
+<td style="text-align:senter"> </td>
+<td style="text-align:senter"> </td>
+<td style="text-align:senter"> </td>
+<td style="text-align:senter"> </td>
+<td style="text-align:senter"> </td>
+<td style="text-align:senter"> </td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="LblockPageSubtitle" id="LblockPageSubtitle4">
+<h2>투찰제한</h2>
+</div>
+<div class="LblockDetail" id="LblockDetail4">
+<form id="투찰제한정보" method="post">
+<table summary="투찰제한정보">
+<caption>투찰제한정보</caption>
+<tbody>
+<tr>
+<th style="width:170px"><label for="zonerstrct1">참가지역1</label></th>
+<td style="width:230px">
+</td>
+<th style="width:170px"><label for="zonerstrct2">참가지역2</label></th>
+<td style="width:230px">
+</td>
+<th style="width:170px"><label for="zonerstrct3">참가지역3</label></th>
+<td style="width:230px">
+</td>
+<th style="width:170px"><label for="zonerstrct4">참가지역4</label></th>
+<td style="width:230px">
+</td>
+</tr>
+<!-- 입찰공고 상세정보에 가산지역 정보 주석처리(송지혜과장요청) 20110426
+                                                <tr>
+
+                                                        <th style="width:200px"><label for="addZone1">가산지역1</label></th>
+                                                        <td style="width:200px">
+                                                        </td>
+                                                        <th style="width:200px"><label for="addZone2">가산지역2</label></th>
+                                                        <td style="width:200px">
+                                                        </td>
+                                                        <th style="width:200px"><label for="addZone3">가산지역3</label></th>
+                                                        <td style="width:200px">
+                                                        </td>
+                                                        <th style="width:200px"><label for="addZone4">가산지역4</label></th>
+                                                        <td style="width:200px">
+                                                        </td>
+                                                </tr>
+                                                 -->
+</tbody>
+</table>
+</form>
+</div><!-- end LblockDetail4-1 -->
+<!-- 2012.09.06 지역의무공동업체제한 추가 -->
+<div class="LblockPageSubtitle" id="LblockPageSubtitle4-1">
+<h2>지역의무공동업체제한</h2>
+</div>
+<div class="LblockDetail" id="LblockDetail4">
+<form id="지역의무공동업체제한" method="post">
+<table summary="지역의무공동업체제한">
+<caption>지역의무공동업체제한</caption>
+<tbody>
+<tr>
+<th style="width:170px"><label for="zonecorptnVndrrstrct1">참가지역1</label></th>
+<td style="width:230px">경기
+                                                        </td>
+<th style="width:170px"><label for="zonecorptnVndrrstrct2">참가지역2</label></th>
+<td style="width:230px">
+</td>
+<th style="width:170px"><label for="zonecorptnVndrrstrct3">참가지역3</label></th>
+<td style="width:230px">
+</td>
+<th style="width:170px"><label for="zonecorptnVndrrstrct4">참가지역4</label></th>
+<td style="width:230px">
+</td>
+</tr>
+</tbody>
+</table>
+</form>
+</div><!-- end LblockDetail4-1 -->
+<div class="LblockPageSubtitle" id="LblockPageSubtitle8">
+<h2>현장설명회</h2>
+</div>
+<div class="LblockDetail" id="LblockDetail6">
+<form id="현장설명회정보" method="post">
+<table summary="현장설명회정보">
+<caption>현장설명회정보</caption>
+<tbody>
+<tr>
+<th style="width:130px"><label for="fieldfairdtm">현장설명일시</label></th>
+<td style="width:200px"> </td>
+<th style="width:130px"><label for="fieldfairspot">현장설명장소</label></th>
+<td style="width:200px"> </td>
+</tr>
+</tbody>
+</table>
+</form>
+</div>
+<div class="LblockPageSubtitle" id="LblockPageSubtitle5">
+<h2>첨부파일 정보</h2>
+</div>
+<div class="LblockListTable" id="LblockListTable0">
+<div class="Lwrapper">
+<table summary="파일정보">
+<caption>파일정보</caption>
+<thead>
+<tr>
+<th class="Lfirst" style="width:130px">문서명</th>
+<th class="Llast" style="width:550px">공고파일명</th>
+</tr>
+</thead>
+<tbody>
+<tr class="Lfirst">
+<td style="width:150px">
+                                                                        현장설명서
+                                                                </td>
+<td class="Llast" style="text-align:left">
+<a class="attach" href="javascript:fn_dds_open('70','2. 현장설명서_2202096_20220621165203841.pdf', '/attachEBID/bidinfo/2. 현장설명서_2202096_20220621165203841.pdf','2. 현장설명서_2202096.pdf');">
+                                                                               2. 현장설명서_2202096.pdf
+                                                                        </a>
+</td>
+</tr>
+<tr class="Lfirst">
+<td style="width:150px">
+                                                                        입찰공고
+                                                                </td>
+<td class="Llast" style="text-align:left">
+<a class="attach" href="javascript:fn_dds_open('10','1. 전자입찰공고문_2202096_20220621165501644.hwp', '/attachEBID/bidinfo/1. 전자입찰공고문_2202096_20220621165501644.hwp','1. 전자입찰공고문_2202096.hwp');">                                                                               1. 전자입찰공고문_2202096.hwp
+                                                                        </a>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div><!-- end LblockListTable2 -->
+</div><!-- end LblockMainBody -->
+<br/>
+<div id="LblockButton">
+<a href="#" onclick="fn_print();" onkeypress="fn_print();"><input type="button" value="출력"/></a>
+<a href="#" onclick="fn_dds_bidlist();" onkeypress="fn_dds_bidlist();"><input type="button" value="목록"/></a>
+</div></div><!-- end LblockMain -->
+<div id="LblockFooter">
+<div id="LblockFooterIn">
+<div id="LblockFooterLogo">
+<a href="#"><img alt="사이트 하단 로고" src="/img/global/footerLogo.gif"/></a>
+</div>
+<div id="LblockFooterMenu">
+<ul>
+<li class="Lfirst"><a href="/ebid.cm.om.cmd.BbsNoticeInitListCmd.dev">고객센터</a></li>
+<li class="Lidx1"><a href="javascript:cn_contants_userGuid()">이용안내</a></li>
+<li class="Lidx2"><a href="javascript:cn_contants_personSafe()">개인정보보호</a></li>
+<li class="Lidx3"><a href="javascript:cn_contants_vndrRegInfo()">업체등록안내</a></li>
+<li class="Llast"><a href="javascript:cn_contants_email()">Email 무단수집거부</a></li>
+</ul>
+</div>
+<div id="LblockFooterCopyright">
+<span>경기도 성남시 분당구 주공3길(구미동 175) 한국토지주택공사 대표전화 031-738-3114 COPYRIGHT(C)2009 By Korea National Hausing Corporation. ALL RIGHT RESERVED.</span>
+</div>
+<div id="LblockFooterFamilySite">
+<h1>관련사이트 바로가기</h1>
+<ul>
+<li class="Lfirst"><a href="http://www.lh.or.kr" target="_blank">한국토지주택공사</a></li>
+<li class="Lidx1"><a href="http://cotis.lh.or.kr" target="_blank">건설기술정보시스템(COTIS)</a></li>
+<li class="Lidx2"><a href="http://www.g2b.go.kr" target="_blank">나라장터</a></li>
+<li class="Lidx3"><a href="http://www.smpp.go.kr" target="_blank">중소기업공동구매정보망</a></li>
+<li class="Lidx4"><a href="http://renew.signgate.com" target="_blank">인증서발급안내</a></li>
+<li class="Lidx5"><a href="http://www.sgic.co.kr" target="_blank">서울보증보험</a></li>
+<li class="Lidx6"><a href="http://www.cak.or.kr" target="_blank">대한건설협회</a></li>
+<li class="Lidx7"><a href="http://www.kocea.or.kr" target="_blank">한국건설기술인협회</a></li>
+<li class="Lidx8"><a href="http://www.kica.or.kr" target="_blank">한국정보통신공사협회</a></li>
+<li class="Lidx9"><a href="http://www.kfsa.or.kr" target="_blank">한국소방안전협회</a></li>
+<li class="Lidx10"><a href="http://www.cgbest.co.kr" target="_blank">건설공제조합</a></li>
+<li class="Lidx11"><a href="http://www.nts.go.kr" target="_blank">국세청</a></li>
+<li class="Lidx12"><a href="http://www.juso.go.kr" target="_blank">도로명주소안내</a></li>
+<li class="Last"><a href="http://help.lh.or.kr:18080" target="_blank">원격지원서비스</a></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<script type="text/javascript">
+</script>
+</body></html>
